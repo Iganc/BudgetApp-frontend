@@ -15,8 +15,10 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (newToken) => {
+    console.log('AuthContext: Saving token:', newToken);
     localStorage.setItem('token', newToken);
     setToken(newToken);
+    console.log('AuthContext: Token saved in localStorage');
   };
 
   const logout = () => {

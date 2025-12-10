@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import BudgetsPage from './pages/BudgetsPage';
 import BudgetDetailsPage from './pages/BudgetDetailsPage';
+import CreateBudgetPage from './pages/CreateBudgetPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -56,6 +57,7 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/budgets" element={<ProtectedRoute><BudgetsPage /></ProtectedRoute>} />
+            <Route path="/budgets/new" element={<ProtectedRoute><CreateBudgetPage /></ProtectedRoute>} />
             <Route path="/budgets/:id" element={<ProtectedRoute><BudgetDetailsPage /></ProtectedRoute>} />
             <Route path="/transactions/new" element={<ProtectedRoute><NewTransaction /></ProtectedRoute>} />
           </Routes>
