@@ -45,36 +45,57 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: '40px auto', padding: 20 }}>
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <div style={{ marginBottom: 12 }}>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={loading}
-            style={{ width: '100%', padding: 8 }}
-          />
+      // Kontener: Centrowanie na ekranie, górny padding
+      <div className="flex justify-center pt-8 pb-12">
+        {/* KARTA: Białe tło, cień, ograniczona szerokość */}
+        <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm">
+
+          <h1 className="text-3xl font-light text-gray-800 mb-6 border-b border-gray-200 pb-3">
+            Login to BudgetApp
+          </h1>
+
+          <form onSubmit={handleLogin} className="flex flex-col space-y-5">
+
+            {/* Email */}
+            <label className="block">
+              <span className="text-sm font-medium text-gray-700">Email:</span>
+              <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                  // Klasy Tailwind dla Inputu
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150"
+              />
+            </label>
+
+            {/* Password */}
+            <label className="block">
+              <span className="text-sm font-medium text-gray-700">Password:</span>
+              <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={loading}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150"
+              />
+            </label>
+
+            {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4 text-sm">{error}</div>}
+
+            {/* Przycisk Login */}
+            <button
+                type="submit"
+                disabled={loading}
+                // Przycisk: pełna szerokość, tło akcentu, duży, pogrubiony
+                className="w-full py-2.5 px-4 border border-transparent rounded-lg shadow-md text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out mt-4 disabled:opacity-50 disabled:bg-indigo-400"
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
+          </form>
         </div>
-        <div style={{ marginBottom: 12 }}>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={loading}
-            style={{ width: '100%', padding: 8 }}
-          />
-        </div>
-        {error && <div style={{ color: 'red', marginBottom: 12 }}>{error}</div>}
-        <button type="submit" disabled={loading} style={{ padding: '8px 16px' }}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
-    </div>
+      </div>
   );
 }
