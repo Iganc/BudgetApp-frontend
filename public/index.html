@@ -1,4 +1,3 @@
-<!-- file: public/index.html -->
 <!doctype html>
 <html lang="en">
   <head>
@@ -8,26 +7,5 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- CRA dev server injects scripts automatically in development -->
   </body>
 </html>
-
-<!-- file: src/index.js -->
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-
-<!-- To run -->
-<!-- 1) install and start dev server -->
-<!-- $ npm install -->
-<!-- $ npm start -->
-<!-- 2) open http://localhost:3000 -->
-<!-- Optional: if backend is on port 8080 add `"proxy": "http://localhost:8080"` to `package.json` or configure CORS on the backend -->
