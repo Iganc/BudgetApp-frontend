@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 // Stałe dla typów transakcji
 const TRANSACTION_TYPES = ['EXPENSE', 'INCOME'];
 
 export default function CreateTransactionPage() {
+    // Używamy useLocation do odczytu parametrów zapytania
+    const location = useLocation();
+    const query = new URLSearchParams(location.search);
+    // Odczytujemy ID budżetu, jeśli zostało przekazane w URL (?budgetId=X)
+    const initialBudgetId = query.get('budgetId');
+
     const [amount, setAmount] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
     const [type, setType] = useState(TRANSACTION_TYPES[0]);
-    const [budgetId, setBudgetId] = useState('');
+
+    // Ustawiamy ID budżetu z URL jako wartość początkową
+    const [budgetId, setBudgetId] = useState(initialBudgetId || '');
     const [availableBudgets, setAvailableBudgets] = useState([]);
 
     const [loadingBudgets, setLoadingBudgets] = useState(true);
@@ -18,7 +26,7 @@ export default function CreateTransactionPage() {
     const { token } = useAuth();
     const navigate = useNavigate();
 
-    // 1. POBIERANIE DOSTĘPNYCH BUDŻETÓW
+    // 1. POBIERANIE DOSTĘPNYCH BUDŻETÓW I USTAWIANIE DOMYŚLNEJ WARTOŚCI
     useEffect(() => {
         const fetchBudgets = async () => {
             try {
@@ -29,10 +37,13 @@ export default function CreateTransactionPage() {
                 const data = await response.json();
                 setAvailableBudgets(data);
 
-                // Opcjonalnie: ustawienie pierwszego budżetu jako domyślny wybór
-                if (data.length > 0) {
+                // LOGIKA DOMYŚLNEGO WYBORU:
+                // 1. Jeśli ID przyszło z URL (initialBudgetId), używamy go (stan już jest ustawiony).
+                // 2. Jeśli lista jest pusta, nic nie ustawiamy.
+                // 3. Jeśli lista istnieje, ale ID nie przyszło z URL, ustawiamy pierwszy budżet jako domyślny.
+                if (data.length > 0 && !initialBudgetId) {
                     setBudgetId(data[0].id.toString());
-                } else {
+                } else if (data.length === 0) {
                     setBudgetId('');
                 }
             } catch (e) {
@@ -44,7 +55,7 @@ export default function CreateTransactionPage() {
         if (token) {
             fetchBudgets();
         }
-    }, [token]);
+    }, [token, initialBudgetId]); // initialBudgetId jest teraz zależnością!
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -55,8 +66,9 @@ export default function CreateTransactionPage() {
             description: description || null,
             category: category,
             type: type,
-            date: new Date().toISOString(), // Ustawienie aktualnej daty
-            // Wymagana struktura dla budżetu, aby backend odebrał ID
+            // Używamy daty lokalnej w formacie ISO, bez strefy czasowej dla LocalDateTime
+            date: new Date().toISOString().slice(0, 19),
+            // Wymagana struktura dla budżetu
             budget: budgetId ? { id: parseInt(budgetId) } : null,
         };
 
@@ -71,11 +83,19 @@ export default function CreateTransactionPage() {
             });
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
+                // Poprawiona obsługa błędu, aby upewnić się, że JSON jest poprawny
+                const errorText = await response.text();
+                let errorData = { message: `Failed to create transaction. Status: ${response.status}` };
+                try {
+                    errorData = JSON.parse(errorText);
+                } catch (e) {
+                    console.warn("Error parsing response JSON:", errorText);
+                }
+
                 throw new Error(errorData.message || `Failed to create transaction. Status: ${response.status}`);
             }
 
-            navigate('/budgets'); // Przekierowanie po sukcesie
+            navigate('/budgets');
         } catch (err) {
             console.error('Caught error:', err);
             setError(err.message);
@@ -121,8 +141,11 @@ export default function CreateTransactionPage() {
                 <label>
                     Assign to Budget:
                     {availableBudgets.length > 0 ? (
-                        <select value={budgetId} onChange={(e) => setBudgetId(e.target.value)} style={{ display: 'block', width: '100%', padding: 8, marginTop: 4 }}>
-                            {/* Opcja na transakcje bez budżetu, jeśli chcesz to dopuścić. Wymagałoby: <option value="">None</option> */}
+                        <select
+                            value={budgetId}
+                            onChange={(e) => setBudgetId(e.target.value)}
+                            style={{ display: 'block', width: '100%', padding: 8, marginTop: 4 }}
+                        >
                             {availableBudgets.map(b => (
                                 <option key={b.id} value={b.id}>{b.name}</option>
                             ))}
