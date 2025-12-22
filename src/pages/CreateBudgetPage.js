@@ -28,7 +28,7 @@ export default function CreateBudgetPage() {
     console.log('===================');
 
     try {
-      const response = await fetch('http://localhost:8080/api/budgets', {
+      const response = await fetch('/api/budgets', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

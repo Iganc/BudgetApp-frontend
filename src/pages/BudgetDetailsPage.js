@@ -50,7 +50,7 @@ export default function BudgetDetailsPage() {
         };
 
         const fetchAllData = () => {
-            fetch(`http://localhost:8080/api/budgets/${id}`, { headers })
+            fetch(`/api/budgets/${id}`, { headers })
                 .then(r => {
                     if (r.status === 401 || r.status === 403) {
                         throw new Error("You are not authorized to view this resource.");
@@ -62,7 +62,7 @@ export default function BudgetDetailsPage() {
                 .catch(e => mounted && setErr("Budget loading failed: " + e.message))
                 .finally(() => mounted && setLoading(false));
 
-            fetch(`http://localhost:8080/api/transactions/budget/${id}`, { headers })
+            fetch(`/api/transactions/budget/${id}`, { headers })
                 .then(r => {
                     if (!r.ok) {
                         if (r.status === 404) return [];
@@ -74,19 +74,19 @@ export default function BudgetDetailsPage() {
                 .catch(e => mounted && console.error("Transactions loading error: ", e.message))
                 .finally(() => mounted && setLoadingTransactions(false));
 
-            fetch(`http://localhost:8080/api/budgets/${id}/spent`, { headers })
+            fetch(`/api/budgets/${id}/spent`, { headers })
                 .then(r => r.ok ? r.json() : 0)
                 .then(data => mounted && setTotalSpent(data))
                 .catch(e => mounted && console.error("Total spent error: ", e.message))
                 .finally(() => mounted && setLoadingSpent(false));
 
-            fetch(`http://localhost:8080/api/budgets/${id}/earned`, { headers })
+            fetch(`/api/budgets/${id}/earned`, { headers })
                 .then(r => r.ok ? r.json() : 0)
                 .then(data => mounted && setTotalIncome(data))
                 .catch(e => mounted && console.error("Total income error: ", e.message))
                 .finally(() => mounted && setLoadingIncome(false));
 
-            fetch(`http://localhost:8080/api/budgets/${id}/balance`, { headers })
+            fetch(`/api/budgets/${id}/balance`, { headers })
                 .then(r => r.ok ? r.json() : 0)
                 .then(data => mounted && setBalance(data))
                 .catch(e => mounted && console.error("Balance error: ", e.message))
@@ -111,7 +111,7 @@ export default function BudgetDetailsPage() {
 
         try {
             const headers = { 'Authorization': `Bearer ${token}` };
-            const response = await fetch(`http://localhost:8080/api/transactions/${transactionId}`, {
+            const response = await fetch(`/api/transactions/${transactionId}`, {
                 method: 'DELETE',
                 headers: headers
             });

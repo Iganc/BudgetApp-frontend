@@ -33,7 +33,7 @@ export default function CreateTransactionPage() {
     const fetchBudgets = async () => {
         setLoadingBudgets(true);
         try {
-            const response = await fetch('http://localhost:8080/api/budgets', {
+            const response = await fetch('/api/budgets', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error('Failed to fetch budgets');
@@ -61,7 +61,7 @@ export default function CreateTransactionPage() {
     const fetchCategories = async () => {
         setLoadingCategories(true);
         try {
-            const response = await fetch('http://localhost:8080/api/categories', {
+            const response = await fetch('/api/categories', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error('Failed to fetch categories');
@@ -93,7 +93,7 @@ export default function CreateTransactionPage() {
 
         try {
             setError(null);
-            const response = await fetch('http://localhost:8080/api/categories', {
+            const response = await fetch('/api/categories', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -149,7 +149,7 @@ export default function CreateTransactionPage() {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/api/transactions', {
+            const response = await fetch('/api/transactions', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

@@ -12,7 +12,7 @@ export default function BudgetsPage() {
     useEffect(() => {
         let mounted = true;
 
-        fetch('http://localhost:8080/api/budgets', {
+        fetch('/api/budgets', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'

@@ -33,7 +33,7 @@ export default function SpendingChart({ budgetId, formatCurrency }) {
 
         const headers = { 'Authorization': `Bearer ${token}` };
 
-        fetch(`http://localhost:8080/api/budgets/${budgetId}/spending-by-category`, { headers })
+        fetch(`/api/budgets/${budgetId}/spending-by-category`, { headers })
             .then(r => {
                 if (!r.ok) throw new Error(`Failed to fetch spending data. Status: ${r.status}`);
                 return r.json();
